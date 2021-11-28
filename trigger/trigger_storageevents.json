@@ -1,0 +1,24 @@
+{
+	"name": "trigger_storageevents",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pl_copy_data_blob_azuresql",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/input/blobs/",
+			"ignoreEmptyBlobs": false,
+			"scope": "/subscriptions/ff58263e-5df6-4a35-af9a-7fb0e6fe9bd7/resourceGroups/azuretraining_rg_1106/providers/Microsoft.Storage/storageAccounts/azuretrainingblob1113",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}

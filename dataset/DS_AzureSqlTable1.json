@@ -1,0 +1,20 @@
+{
+	"name": "DS_AzureSqlTable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "covid_dataset"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "covid19_table"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,42 @@
+{
+	"name": "pl_conditional",
+	"properties": {
+		"activities": [
+			{
+				"name": "filter an array",
+				"type": "Filter",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.nums",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@greaterOrEquals(item(), 5)",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"nums": {
+				"type": "array",
+				"defaultValue": [
+					1,
+					2,
+					3,
+					4,
+					5,
+					6,
+					7,
+					8,
+					10
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-11-22T14:37:06Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

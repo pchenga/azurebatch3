@@ -1,0 +1,26 @@
+{
+	"name": "pipeline_set",
+	"properties": {
+		"activities": [
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "a",
+					"value": "xyz"
+				}
+			}
+		],
+		"variables": {
+			"a": {
+				"type": "String",
+				"defaultValue": "abc"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-11-23T13:49:56Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

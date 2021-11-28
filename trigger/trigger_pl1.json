@@ -1,0 +1,24 @@
+{
+	"name": "trigger_pl1",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pl_copy_data_azure_sql",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 1,
+				"startTime": "2021-11-26T13:43:00",
+				"timeZone": "India Standard Time"
+			}
+		}
+	}
+}

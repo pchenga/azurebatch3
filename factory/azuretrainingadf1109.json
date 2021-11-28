@@ -1,0 +1,17 @@
+{
+	"name": "azuretrainingadf1109",
+	"properties": {
+		"globalParameters": {
+			"adls_input_path": {
+				"type": "string",
+				"value": "/input/customer.csv"
+			}
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "2de2b3ee-ea92-4460-9079-2c264b749947",
+		"tenantId": "7c791c5e-0edc-4ee9-8204-bb96764bb483"
+	}
+}

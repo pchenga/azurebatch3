@@ -1,0 +1,19 @@
+{
+	"name": "DS_AzureSqlTable",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_AzureSqlDatabase_Param",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"database_name": "azuredemosqldb1117"
+			}
+		},
+		"folder": {
+			"name": "param_ds"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

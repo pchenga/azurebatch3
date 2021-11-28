@@ -1,0 +1,37 @@
+{
+	"name": "ds_azuresql_source",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_azuredb",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "employee_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "employee_name",
+				"type": "varchar"
+			},
+			{
+				"name": "employee_email",
+				"type": "varchar"
+			},
+			{
+				"name": "employee_salary",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "employee_table"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
