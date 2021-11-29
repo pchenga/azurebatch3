@@ -29,6 +29,9 @@
 		"LS_AzureSqlDatabase_Param_connectionString": {
 			"value": ""
 		},
+		"linkedService1_connectionString": {
+			"value": ""
+		},
 		"ls_azuredb_connectionString": {
 			"value": ""
 		},
