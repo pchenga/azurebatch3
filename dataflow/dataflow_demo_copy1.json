@@ -1,0 +1,32 @@
+{
+	"name": "dataflow_demo_copy1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_AzureSqlTable_Covid19",
+						"type": "DatasetReference"
+					},
+					"name": "covid19source"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable1",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Select1"
+				}
+			],
+			"script": "source(output(\n\t\tSno as string,\n\t\tDate as string,\n\t\tTime as string,\n\t\t{State/UnionTerritory} as string,\n\t\tConfirmedIndianNational as string,\n\t\tConfirmedForeignNational as string,\n\t\tCured as string,\n\t\tDeaths as string,\n\t\tConfirmed as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> covid19source\ncovid19source select(mapColumn(\n\t\tSno,\n\t\tDate,\n\t\t{State/UnionTerritory},\n\t\tCured,\n\t\tDeaths,\n\t\tConfirmed\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+		}
+	}
+}
