@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase_AKV'"
 		},
+		"AzureSynapseAnalytics1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSynapseAnalytics1'"
+		},
 		"LS_AzureBlobStorage1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_AzureBlobStorage1'"
@@ -84,6 +88,9 @@
 					},
 					"AzureSqlDatabase1_Test_connectionString": {
 						"value": "[parameters('AzureSqlDatabase1_Test_connectionString')]"
+					},
+					"AzureSynapseAnalytics1_connectionString": {
+						"value": "[parameters('AzureSynapseAnalytics1_connectionString')]"
 					},
 					"LS_AzureBlobStorage1_connectionString": {
 						"value": "[parameters('LS_AzureBlobStorage1_connectionString')]"
