@@ -1,0 +1,51 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "azuretrainingadf1109"
+		},
+		"AzureSqlDatabase1_Test_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabase_AKV_connectionString": {
+			"value": ""
+		},
+		"LS_AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"LS_AzureDataLakeStorage_ADLS_accountKey": {
+			"value": ""
+		},
+		"LS_AzureSqlDatabase1_connectionString": {
+			"value": ""
+		},
+		"LS_AzureSqlDatabase_New_connectionString": {
+			"value": ""
+		},
+		"LS_AzureSqlDatabase_Param_connectionString": {
+			"value": ""
+		},
+		"ls_azuredb_connectionString": {
+			"value": ""
+		},
+		"ls_blob_connectionString": {
+			"value": ""
+		},
+		"AzureKeyVault_properties_typeProperties_baseUrl": {
+			"value": "https://azuretrainingkeyvault112.vault.azure.net/"
+		},
+		"LS_AzureDataLakeStorage_ADLS_properties_typeProperties_url": {
+			"value": "https://azuretrainingadlsgen2.dfs.core.windows.net/"
+		},
+		"trigger_storageevents_properties_typeProperties_scope": {
+			"value": "/subscriptions/ff58263e-5df6-4a35-af9a-7fb0e6fe9bd7/resourceGroups/azuretraining_rg_1106/providers/Microsoft.Storage/storageAccounts/azuretrainingblob1113"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}

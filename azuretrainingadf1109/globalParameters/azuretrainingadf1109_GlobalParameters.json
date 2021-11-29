@@ -1,0 +1,6 @@
+{
+	"adls_input_path": {
+		"type": "string",
+		"value": "/input/customer.csv"
+	}
+}
