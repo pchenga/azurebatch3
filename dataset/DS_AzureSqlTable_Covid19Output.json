@@ -1,0 +1,16 @@
+{
+	"name": "DS_AzureSqlTable_Covid19Output",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_azuredb",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "covid19_output1129"
+		}
+	}
+}

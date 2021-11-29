@@ -1,0 +1,53 @@
+{
+	"name": "DS_AzureSqlTable_Covid19",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_azuredb",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Sno",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Date",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Time",
+				"type": "nvarchar"
+			},
+			{
+				"name": "State/UnionTerritory",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ConfirmedIndianNational",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ConfirmedForeignNational",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Cured",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Deaths",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Confirmed",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "covid19_table"
+		}
+	}
+}
