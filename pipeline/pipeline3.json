@@ -19,6 +19,13 @@
 						"referenceName": "dataflow_demo_copy1",
 						"type": "DataFlowReference"
 					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "linkedService1",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "test/sqldw"
+					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
