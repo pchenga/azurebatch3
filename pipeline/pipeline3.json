@@ -15,10 +15,6 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataflow": {
-						"referenceName": "dataflow_demo_copy1",
-						"type": "DataFlowReference"
-					},
 					"staging": {
 						"linkedService": {
 							"referenceName": "linkedService1",
