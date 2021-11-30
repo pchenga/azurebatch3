@@ -19,6 +19,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSynapseAnalytics1'"
 		},
+		"AzureSynapseAnalytics2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSynapseAnalytics2'"
+		},
 		"LS_AzureBlobStorage1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_AzureBlobStorage1'"
@@ -96,6 +100,9 @@
 					"AzureSynapseAnalytics1_connectionString": {
 						"value": "[parameters('AzureSynapseAnalytics1_connectionString')]"
 					},
+					"AzureSynapseAnalytics2_connectionString": {
+						"value": "[parameters('AzureSynapseAnalytics2_connectionString')]"
+					},
 					"LS_AzureBlobStorage1_connectionString": {
 						"value": "[parameters('LS_AzureBlobStorage1_connectionString')]"
 					},
@@ -143,9 +150,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"AzureSqlDatabase_AKV_connectionString": {
-						"value": "[parameters('AzureSqlDatabase_AKV_connectionString')]"
 					}
 				}
 			},
@@ -167,13 +171,36 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"AzureSqlDatabase_AKV_connectionString": {
+						"value": "[parameters('AzureSqlDatabase_AKV_connectionString')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'azuretrainingadf1109_ArmTemplate_1')]"
+			]
+		},
+		{
+			"name": "azuretrainingadf1109_ArmTemplate_3",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
 					"trigger_storageevents_properties_typeProperties_scope": {
 						"value": "[parameters('trigger_storageevents_properties_typeProperties_scope')]"
 					}
 				}
 			},
 			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'azuretrainingadf1109_ArmTemplate_1')]"
+				"[resourceId('Microsoft.Resources/deployments', 'azuretrainingadf1109_ArmTemplate_2')]"
 			]
 		}
 	]
