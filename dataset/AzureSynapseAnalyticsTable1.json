@@ -10,7 +10,7 @@
 		"schema": [],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "covid_output"
+			"table": "covid_output_new"
 		}
 	}
 }
