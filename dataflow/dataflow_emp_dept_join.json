@@ -25,7 +25,7 @@
 						"referenceName": "AzureSynapseAnalyticsTable3",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "sinknew"
 				}
 			],
 			"transformations": [
@@ -42,7 +42,7 @@
 					"name": "FilterBySal"
 				}
 			],
-			"script": "source(output(\n\t\teid as string,\n\t\tename as string,\n\t\tsal as string,\n\t\tdeptid as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> empsource\nsource(output(\n\t\tdeptid as string,\n\t\tdeptname as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> deptsource\nempsource, deptsource join(empsource@deptid == deptsource@deptid,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join1\nJoin1 select(mapColumn(\n\t\tename,\n\t\tsal,\n\t\tdeptid = deptsource@deptid,\n\t\tdeptname\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 derive({ branch} = 'Bangalore') ~> DerivedColumn1\nDerivedColumn1 filter(greater(toInteger(sal),5000)) ~> FilterBySal\nFilterBySal sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+			"script": "source(output(\n\t\teid as string,\n\t\tename as string,\n\t\tsal as string,\n\t\tdeptid as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> empsource\nsource(output(\n\t\tdeptid as string,\n\t\tdeptname as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> deptsource\nempsource, deptsource join(empsource@deptid == deptsource@deptid,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join1\nJoin1 select(mapColumn(\n\t\tename,\n\t\tsal,\n\t\tdeptid = deptsource@deptid,\n\t\tdeptname\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 derive({ branch} = 'Bangalore') ~> DerivedColumn1\nDerivedColumn1 filter(greater(toInteger(sal),5000)) ~> FilterBySal\nFilterBySal sink(allowSchemaDrift: false,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sinknew"
 		}
 	}
 }
