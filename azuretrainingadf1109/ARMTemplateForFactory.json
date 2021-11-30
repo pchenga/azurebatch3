@@ -2151,7 +2151,7 @@
 				"schema": [],
 				"typeProperties": {
 					"schema": "dbo",
-					"table": "test"
+					"table": "emp_dept_output"
 				}
 			},
 			"dependsOn": [
@@ -3224,6 +3224,19 @@
 				"[concat(variables('factoryId'), '/datasets/ds_dept_adls_csv')]",
 				"[concat(variables('factoryId'), '/datasets/AzureSynapseAnalyticsTable5')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline3')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
 		}
 	]
 }
