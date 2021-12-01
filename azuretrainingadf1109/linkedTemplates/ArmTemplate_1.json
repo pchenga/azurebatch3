@@ -118,7 +118,7 @@
 				"schema": [],
 				"typeProperties": {
 					"schema": "dbo",
-					"table": "emp_dept_output"
+					"table": "emp_dept_output_1201"
 				}
 			},
 			"dependsOn": []
