@@ -19,6 +19,13 @@
 						"referenceName": "dataflow_emp_dept_join",
 						"type": "DataFlowReference"
 					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "LS_AzureDataLakeStorage_ADLS",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "input"
+					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
