@@ -338,7 +338,7 @@
 				"schema": [],
 				"typeProperties": {
 					"schema": "dbo",
-					"table": "watermarktable"
+					"table": "output1"
 				}
 			},
 			"dependsOn": [
