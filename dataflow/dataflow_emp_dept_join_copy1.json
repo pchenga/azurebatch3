@@ -1,0 +1,42 @@
+{
+	"name": "dataflow_emp_dept_join_copy1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText4",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "DelimitedText5",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText6",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Pivot1"
+				},
+				{
+					"name": "Unpivot1"
+				}
+			],
+			"script": "source(output(\n\t\tsid as string,\n\t\tsname as string,\n\t\tsubjects as string,\n\t\tmarks as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nsource(output(\n\t\tsid as string,\n\t\tsname as string,\n\t\tazure as string,\n\t\tbi as string,\n\t\tetl as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source2\nsource1 pivot(groupBy(sid),\n\tpivotBy(subjects),\n\ttotal = sum(toInteger(marks)),\n\tcolumnNaming: '$N$V',\n\tlateral: true) ~> Pivot1\nsource2 unpivot(output(\n\t\t\n\t),\n\tlateral: true,\n\tignoreNullPivots: false) ~> Unpivot1\nPivot1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tdeptid as string,\n\t\tdeptname as string\n\t),\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+		}
+	}
+}
