@@ -1,0 +1,41 @@
+{
+	"name": "DelimitedText3",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_AzureDataLakeStorage_ADLS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "students_data1.csv",
+				"folderPath": "csv_files",
+				"fileSystem": "input"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "sid",
+				"type": "String"
+			},
+			{
+				"name": "sname",
+				"type": "String"
+			},
+			{
+				"name": "subjects",
+				"type": "String"
+			},
+			{
+				"name": "marks",
+				"type": "String"
+			}
+		]
+	}
+}
