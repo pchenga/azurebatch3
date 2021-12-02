@@ -17,6 +17,80 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Parquet1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_AzureDataLakeStorage_ADLS",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"filename": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@concat(dataset().filename,'.parquet')",
+							"type": "Expression"
+						},
+						"folderPath": "parquet_files",
+						"fileSystem": "ouput"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SinkDataSet')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_blob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "output"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "employee_id",
+						"type": "String"
+					},
+					{
+						"name": "employee_name",
+						"type": "String"
+					},
+					{
+						"name": "employee_email",
+						"type": "String"
+					},
+					{
+						"name": "employee_salary",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SourceDataset')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -368,7 +442,9 @@
 				"annotations": [],
 				"lastPublishTime": "2021-11-20T13:47:34Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Parquet1')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/pipeline2')]",
@@ -615,7 +691,8 @@
 				"lastPublishTime": "2021-11-27T22:16:00Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SourceDataset')]"
+				"[concat(variables('factoryId'), '/datasets/SourceDataset')]",
+				"[concat(variables('factoryId'), '/datasets/SinkDataSet')]"
 			]
 		},
 		{
@@ -1403,7 +1480,8 @@
 				"lastPublishTime": "2021-11-27T08:14:26Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SourceDataset')]"
+				"[concat(variables('factoryId'), '/datasets/SourceDataset')]",
+				"[concat(variables('factoryId'), '/datasets/SinkDataSet')]"
 			]
 		},
 		{
@@ -1701,239 +1779,6 @@
 				"lastPublishTime": "2021-11-27T14:12:58Z"
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pl_onstatus')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings",
-									"blockSizeInMB": 4
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "ds_azuresql_source",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "ds_blob_csv",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Set variable1",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "Copy data1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "a",
-							"value": "success"
-						}
-					},
-					{
-						"name": "Set variable1_copy1",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "Copy data1",
-								"dependencyConditions": [
-									"Failed"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "a",
-							"value": "failue"
-						}
-					},
-					{
-						"name": "Set variable1_copy2",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "Copy data1",
-								"dependencyConditions": [
-									"Completed"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "a",
-							"value": "completion"
-						}
-					},
-					{
-						"name": "Set variable1_copy1_copy1",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "Set variable1_copy1",
-								"dependencyConditions": [
-									"Skipped"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "a",
-							"value": "skipped"
-						}
-					},
-					{
-						"name": "Set variable1_copy1_copy1_copy1",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "Set variable1",
-								"dependencyConditions": [
-									"Skipped"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "a",
-							"value": "skipped"
-						}
-					},
-					{
-						"name": "Set variable1_copy1_copy1_copy2",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "Set variable1_copy2",
-								"dependencyConditions": [
-									"Skipped"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "a",
-							"value": "skipped"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"variables": {
-					"a": {
-						"type": "String",
-						"defaultValue": "test"
-					}
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-11-25T14:45:25Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_azuresql_source')]",
-				"[concat(variables('factoryId'), '/datasets/ds_blob_csv')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dataflow__lookup_others')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_emp_adls_csv",
-								"type": "DatasetReference"
-							},
-							"name": "empsource"
-						},
-						{
-							"dataset": {
-								"referenceName": "ds_dept_adls_csv",
-								"type": "DatasetReference"
-							},
-							"name": "deptsource"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "AzureSqlTable1",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "Select1"
-						},
-						{
-							"name": "Lookup1"
-						},
-						{
-							"name": "Aggregate1"
-						}
-					],
-					"script": "source(output(\n\t\teid as string,\n\t\tename as string,\n\t\tsal as string,\n\t\tdeptid as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> empsource\nsource(output(\n\t\tdeptid as string,\n\t\tdeptname as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> deptsource\nLookup1 select(mapColumn(\n\t\tename,\n\t\tsal,\n\t\tdeptid = deptsource@deptid,\n\t\tdeptname\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nempsource, deptsource lookup(empsource@deptid == deptsource@deptid,\n\tmultiple: false,\n\tpickup: 'any',\n\tbroadcast: 'auto')~> Lookup1\nSelect1 aggregate(groupBy(deptid),\n\ttotal = sum(toInteger(sal))) ~> Aggregate1\nAggregate1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_emp_adls_csv')]",
-				"[concat(variables('factoryId'), '/datasets/ds_dept_adls_csv')]"
-			]
 		}
 	]
 }
