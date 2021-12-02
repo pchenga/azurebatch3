@@ -2105,7 +2105,7 @@
 				"schema": [],
 				"typeProperties": {
 					"schema": "dbo",
-					"table": "output1"
+					"table": "watermarktable"
 				}
 			},
 			"dependsOn": [
