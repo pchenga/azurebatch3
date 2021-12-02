@@ -17,6 +17,110 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/pl_copy_data_blob_azuresql')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "execute copy data",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"tableOption": "autoCreate",
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DS_DelimitedText1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DS_AzureSqlTable1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Delete1",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "execute copy data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "DS_DelimitedText1",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"enableLogging": false,
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-11-27T14:12:58Z"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/pl_onstatus')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -277,13 +381,28 @@
 							"name": "Select1"
 						},
 						{
-							"name": "ConditionalSplit1"
+							"name": "Window1"
 						},
 						{
-							"name": "Union1"
+							"name": "Filter1"
+						},
+						{
+							"name": "DenseRank1"
+						},
+						{
+							"name": "Rank2"
+						},
+						{
+							"name": "SurrogateKey1"
+						},
+						{
+							"name": "AlterRow1"
+						},
+						{
+							"name": "Select2"
 						}
 					],
-					"script": "source(output(\n\t\teid as string,\n\t\tename as string,\n\t\tsal as string,\n\t\tdeptid as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> empsource\nsource(output(\n\t\tdeptid as string,\n\t\tdeptname as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> deptsource\nempsource, deptsource lookup(empsource@deptid == deptsource@deptid,\n\tmultiple: false,\n\tpickup: 'any',\n\tbroadcast: 'auto')~> Lookup1\nLookup1 select(mapColumn(\n\t\teid,\n\t\tename,\n\t\tsal,\n\t\tdeptid = empsource@deptid,\n\t\tdeptname\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 split(equals(deptid, '101'),\n\tequals(deptid, '102'),\n\tequals(deptid, '103'),\n\tdisjoint: false) ~> ConditionalSplit1@(dept101, dept102, dept103, default)\nConditionalSplit1@dept101, ConditionalSplit1@dept102, ConditionalSplit1@dept103, ConditionalSplit1@default union(byName: true)~> Union1\nUnion1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink2"
+					"script": "source(output(\n\t\teid as string,\n\t\tename as string,\n\t\tsal as string,\n\t\tdeptid as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> empsource\nsource(output(\n\t\tdeptid as string,\n\t\tdeptname as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> deptsource\nempsource, deptsource lookup(empsource@deptid == deptsource@deptid,\n\tmultiple: false,\n\tpickup: 'any',\n\tbroadcast: 'auto')~> Lookup1\nLookup1 select(mapColumn(\n\t\teid,\n\t\tename,\n\t\tsal,\n\t\tdeptid = empsource@deptid,\n\t\tdeptname\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 window(over(deptid),\n\tdesc(toInteger(sal), true),\n\trank = rank()) ~> Window1\nWindow1 filter(equals(rank, 1)) ~> Filter1\nSelect1 rank(desc(toInteger(sal), true),\n\toutput(rank as long),\n\tdense: true) ~> DenseRank1\nSelect1 rank(desc(toInteger(sal), true),\n\toutput(rank as long)) ~> Rank2\nSelect1 keyGenerate(output(sk as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSurrogateKey1 alterRow(insertIf(equals(deptid,'101')),\n\tdeleteIf(equals(deptid,'102'))) ~> AlterRow1\nAlterRow1 select(mapColumn(\n\t\teid,\n\t\tename,\n\t\tsal,\n\t\tdeptid,\n\t\tdeptname,\n\t\tsk\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select2\nFilter1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink2"
 				}
 			},
 			"dependsOn": []
@@ -787,7 +906,9 @@
 					]
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/pl_copy_data_blob_azuresql')]"
+			]
 		}
 	]
 }
