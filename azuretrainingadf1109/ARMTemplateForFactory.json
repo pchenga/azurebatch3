@@ -3050,6 +3050,71 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Json3')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_AzureDataLakeStorage_ADLS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "students.json",
+						"folderPath": "json_files",
+						"fileSystem": "input"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"sid": {
+							"type": "integer"
+						},
+						"sname": {
+							"type": "string"
+						},
+						"courses": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_AzureDataLakeStorage_ADLS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Json4')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_AzureDataLakeStorage_ADLS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "json_files",
+						"fileSystem": "input"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_AzureDataLakeStorage_ADLS')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Parquet1')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -3934,6 +3999,44 @@
 				"[concat(variables('factoryId'), '/datasets/ds_emp_adls_csv')]",
 				"[concat(variables('factoryId'), '/datasets/ds_dept_adls_csv')]",
 				"[concat(variables('factoryId'), '/datasets/AzureSynapseAnalyticsTable5')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_flatten')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Json3",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Json4",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "Flatten1"
+						}
+					],
+					"script": "source(output(\n\t\tsid as integer,\n\t\tsname as string,\n\t\tcourses as string[]\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinferDriftedColumnTypes: true,\n\tignoreNoFilesFound: false,\n\tdocumentForm: 'singleDocument') ~> source1\nsource1 foldDown(unroll(courses),\n\tmapColumn(\n\t\tsid,\n\t\tsname,\n\t\tcourses\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Flatten1\nFlatten1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Json3')]",
+				"[concat(variables('factoryId'), '/datasets/Json4')]"
 			]
 		},
 		{
