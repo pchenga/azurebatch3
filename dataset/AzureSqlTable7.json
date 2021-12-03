@@ -1,0 +1,33 @@
+{
+	"name": "AzureSqlTable7",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_azuredb",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "sid",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sname",
+				"type": "nvarchar"
+			},
+			{
+				"name": "courses",
+				"type": "nvarchar"
+			},
+			{
+				"name": "address",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "students"
+		}
+	}
+}

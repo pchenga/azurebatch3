@@ -1,0 +1,38 @@
+{
+	"name": "dataflow_parse",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable7",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable8",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "ParseedCourses"
+				},
+				{
+					"name": "ParseedAddress"
+				},
+				{
+					"name": "Select1"
+				}
+			],
+			"script": "source(output(\n\t\tsid as string,\n\t\tsname as string,\n\t\tcourses as string,\n\t\taddress as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> source1\nsource1 parse(ParsedCourses = courses ? (course1 as string,\n\t\tcourse2 as string,\n\t\tcourse3 as string),\n\tformat: 'delimited',\n\tcolumnNamesAsHeader: false,\n\tcolumnDelimiter: '|',\n\tnullValue: '') ~> ParseedCourses\nParseedCourses parse(ParsedAddress = address ? (city as string,\n\t\tstate as string),\n\tformat: 'json',\n\tdocumentForm: 'singleDocument') ~> ParseedAddress\nParseedAddress select(mapColumn(\n\t\tsid,\n\t\tsname,\n\t\tcourse1 = ParsedCourses.course1,\n\t\tcourse2 = ParsedCourses.course2,\n\t\tcourse3 = ParsedCourses.course3,\n\t\tcity = ParsedAddress.city,\n\t\tstate = ParsedAddress.state\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+		}
+	}
+}
