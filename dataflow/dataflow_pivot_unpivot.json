@@ -1,5 +1,5 @@
 {
-	"name": "dataflow_emp_dept_join_copy1",
+	"name": "dataflow_pivot_unpivot",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
