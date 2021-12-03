@@ -200,6 +200,26 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'azuretrainingadf1109_ArmTemplate_2')]"
+			]
+		},
+		{
+			"name": "azuretrainingadf1109_ArmTemplate_4",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_4.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"trigger_storageevents_properties_typeProperties_scope": {
 						"value": "[parameters('trigger_storageevents_properties_typeProperties_scope')]"
@@ -207,7 +227,7 @@
 				}
 			},
 			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'azuretrainingadf1109_ArmTemplate_2')]"
+				"[resourceId('Microsoft.Resources/deployments', 'azuretrainingadf1109_ArmTemplate_3')]"
 			]
 		}
 	]
