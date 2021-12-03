@@ -1,0 +1,28 @@
+{
+	"name": "powerquery1",
+	"properties": {
+		"type": "WranglingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"name": "ds_emp_adls_csv",
+					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~>  ds_emp_adls_csv",
+					"dataset": {
+						"referenceName": "ds_emp_adls_csv",
+						"type": "DatasetReference"
+					}
+				},
+				{
+					"name": "ds_dept_adls_csv",
+					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~>  ds_dept_adls_csv",
+					"dataset": {
+						"referenceName": "ds_dept_adls_csv",
+						"type": "DatasetReference"
+					}
+				}
+			],
+			"script": "section Section1;\r\nshared ds_emp_adls_csv = let\r\n  AdfDoc = AzureStorage.DataLakeContents(\"https://azuretrainingadlsgen2.dfs.core.windows.net/input/csv_files/emp_data.csv\"),\r\n  Csv = Csv.Document(AdfDoc, [Delimiter = \",\", Encoding = TextEncoding.Utf8, QuoteStyle = QuoteStyle.Csv]),\r\n  PromotedHeaders = Table.PromoteHeaders(Csv, [PromoteAllScalars = true]),\r\n  #\"Merged queries\" = Table.NestedJoin(PromotedHeaders, {\"deptid\"}, ds_dept_adls_csv, {\"deptid\"}, \"ds_dept_adls_csv\", JoinKind.LeftOuter),\r\n  #\"Expanded ds_dept_adls_csv\" = Table.ExpandTableColumn(#\"Merged queries\", \"ds_dept_adls_csv\", {\"deptid\", \"deptname\"}, {\"ds_dept_adls_csv.deptid\", \"ds_dept_adls_csv.deptname\"}),\r\n  #\"Filtered rows\" = Table.SelectRows(#\"Expanded ds_dept_adls_csv\", each [ds_dept_adls_csv.deptid] <> null and [ds_dept_adls_csv.deptid] <> \"\"),\r\n  #\"Removed columns\" = Table.RemoveColumns(#\"Filtered rows\", {\"deptid\"})\r\nin\r\n  #\"Removed columns\";\r\nshared ds_dept_adls_csv = let\r\n  AdfDoc = AzureStorage.DataLakeContents(\"https://azuretrainingadlsgen2.dfs.core.windows.net/input/csv_files/dept_data.csv\"),\r\n  Csv = Csv.Document(AdfDoc, [Delimiter = \",\", Encoding = TextEncoding.Utf8, QuoteStyle = QuoteStyle.Csv]),\r\n  PromotedHeaders = Table.PromoteHeaders(Csv, [PromoteAllScalars = true])\r\nin\r\n  PromotedHeaders;\r\nshared UserQuery = let\r\n  Source = ds_emp_adls_csv\r\nin\r\n  Source;\r\n",
+			"documentLocale": "en-us"
+		}
+	}
+}
